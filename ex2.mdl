@@ -1,0 +1,68 @@
+// training sydney
+
+setThermoPackage("GasTbl");
+
+
+// create some variables for later
+real hin;
+real hout;
+real houtIdeal;
+real dhIdeal;
+real eff;
+
+
+
+FlowStation stationX;
+stationX.W = 100;
+stationX.setTotalTP( 550, 20 );
+stationX.MN = 0.4;
+// save the value of enthalpy
+
+
+hin = stationX.ht;
+dhIdeal = stationX.getIdealWork( 100.0 );
+
+
+// output the variables again
+cout << "mass flow = " << stationX.W << endl;
+cout << "total pressure = " << stationX.Pt << endl;
+cout << "total temperature = " << stationX.Tt << endl;
+cout << "enthalpy = " << stationX.ht << endl;
+cout << "entropy = " << stationX.S << endl;
+cout << endl;
+
+
+// --------------------------------------------------------------------------
+// set the ideal exit properties
+// --------------------------------------------------------------------------
+// just re-set the station properties
+// from the above I know the entropy is -0.1784 (for GasTbl)
+stationX.setTotalSP( -0.17841, 100.0 );
+// save the ideal enthalpy
+houtIdeal = stationX.ht;
+
+
+// output the variables again
+cout << "mass flow = " << stationX.W << endl;
+cout << "total pressure = " << stationX.Pt << endl;
+cout << "total temperature = " << stationX.Tt << endl;
+cout << "enthalpy = " << stationX.ht << endl;
+cout << "entropy = " << stationX.S << endl;
+cout << endl;
+cout << "= " << dhIdeal << endl;
+
+
+
+// calculate actual exit enthalpy
+eff = 0.85;
+hout = ( houtIdeal - hin )/eff + hin;
+stationX.setTotal_hP( hout, 100.0 );
+
+
+// output the variables again
+cout << "mass flow = " << stationX.W << endl;
+cout << "total pressure = " << stationX.Pt << endl;
+cout << "total temperature = " << stationX.Tt << endl;
+cout << "enthalpy = " << stationX.ht << endl;
+cout << "ideal work = " << dhIdeal << endl;
+cout << "entropy = " << stationX.S << endl;
