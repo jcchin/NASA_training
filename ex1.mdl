@@ -2,4 +2,15 @@
 
 setThermoPackage("GasTbl");
 
-awesome new feature
+
+FlowStation stationX;
+stationX.W = 100;
+stationX.setTotalTP( 550, 20 );
+stationX.MN = 0.4;
+
+cout << stationX.Pt << endl;
+cout << stationX.Tt << endl;
+cout << stationX.A << endl;
+cout << stationX.MN << endl;
+cout << stationX.ht << endl;
+
