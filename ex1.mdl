@@ -1,0 +1,4 @@
+// training sydney
+
+setThermoPackage("GasTbl");
+
