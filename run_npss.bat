@@ -1,19 +1,7 @@
 @echo off
 
-IF EXIST Z:\Documents\2014\RHC\GT_sfun\NPSS.nt.sfunction2\ (
-    REM Run file for Jeffrey Chin
-    set NPSS_TOP=Z:\Documents\2014\RHC\GT_sfun\NPSS.nt.sfunction2\
-)
 
-IF EXIST C:\PROJECTS\DSA\Simulations\DSA_NPSS\NPSS.nt.sfunction2\ (
-    REM Run file for Jeffrey Csank
-    set NPSS_TOP=C:\PROJECTS\DSA\Simulations\DSA_NPSS\NPSS.nt.sfunction2\
-)
-
-IF EXIST C:\AZfiles\git\nsfcn\NPSS.nt.sfunction2\ (
-    REM Run file for Alicia Zinnecker
-    set NPSS_TOP=C:\AZfiles\git\nsfcn\NPSS.nt.sfunction2\
-)
+set NPSS_TOP=C:\Program Files (x86)\NPSS.nt.V165C-OPT-Full\
 
 set NPSS_CONFIG=nt
 set NPSS_DEV_TOP=%NPSS_TOP%\DLMdevkit

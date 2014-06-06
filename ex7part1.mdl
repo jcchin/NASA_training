@@ -1,0 +1,133 @@
+//
+//  Exercise 6: Creating a DataViewer
+//     builds off of Exercise 5
+//
+
+
+// declare the thermodynamics package to be used
+setThermoPackage( "GasTbl" );
+
+
+// instantiate the Elements in this model
+// syntax is: 
+// Element elementType elementName { }
+
+Element FlightConditions ambient {
+   alt = 10000.;
+   MN = 0.40;
+   W = 100.;
+} 
+
+
+Element Inlet inlet { 
+   eRamBase = 0.9800;
+} 
+
+
+Element Compressor HPC { 
+	#include <hpc.map>;
+	S_map.PRdes = 20.;
+	S_map.effDes = 0.90;
+  
+} 
+
+
+Element FuelStart fuelIn { 
+   LHV = 18500.;
+} 
+
+
+Element Burner burner { 
+   switchBurn = "FAR";
+   FAR = 0.0300;
+} 
+
+
+Element Turbine HPT {
+	#include <hpt.map>
+	S_map.parmMap= 4.00;
+	S_map.effDes = 0.90;
+	S_map.parmMapDes = 4.5;    /// ??
+} 
+
+
+Element Nozzle nozzle { 
+   switchType = "CONIC";
+   PsExhName = "ambient.Ps";
+} 
+
+
+Element FlowEnd end { 
+} 
+
+
+Element Shaft shaft { 
+   ShaftInputPort HPClink;
+   ShaftInputPort HPTlink;
+   Nmech = 5000.;
+} 
+
+
+// link the Elements together via their Ports
+linkPorts( "ambient.Fl_O", "inlet.Fl_I",    "station0"  );
+linkPorts( "inlet.Fl_O",   "HPC.Fl_I",      "station2"  );
+linkPorts( "HPC.Fl_O",     "burner.Fl_I",   "station3"  );
+linkPorts( "fuelIn.Fu_O",  "burner.Fu_I",   "stationF"  );
+linkPorts( "burner.Fl_O",  "HPT.Fl_I",      "station4"  );
+linkPorts( "HPT.Fl_O",     "nozzle.Fl_I",   "station5"  );
+linkPorts( "nozzle.Fl_O",  "end.Fl_I",      "station9"  );
+
+linkPorts( "HPC.Sh_O",     "shaft.HPClink", "HPCwork"   );
+linkPorts( "HPT.Sh_O",     "shaft.HPTlink", "HPTwork"   );
+
+
+// print a "done" statement
+cout << "done parsing the model \n";
+
+#include <EX7.view_page>
+
+
+// set the model to DESIGN mode to run the turbojet DESIGN point
+setOption( "switchDes", "DESIGN" );
+autoSolverSetup();
+
+// execute the DESIGN point
+run();
+page.display();
+
+
+// output some variables of interest
+cout << "turbojet gross thrust = " << nozzle.Fg << " " << nozzle.Fg.units << endl;
+cout << "turbojet ram drag     = " << inlet.Fram << " " << inlet.Fram.units << endl;
+cout << "turbojet net thrust = " << nozzle.Fg - inlet.Fram << " " << nozzle.Fg.units << endl;
+cout << "turbojet fuel flow = " << burner.Wfuel << " " << burner.Wfuel.units << endl;
+cout << "burner exit temperature = " << burner.Fl_O.Tt << " " << burner.Fl_O.Tt.units << endl;
+cout << endl;
+
+
+
+
+
+
+setOption( "switchDes", "OFFDESIGN" );
+autoSolverSetup();
+run();
+page.display();
+
+// CASE 1
+ambient.MN = 0;
+ambient.alt = 0;
+run();
+page.display();
+
+// CASE 2
+ambient.MN = .4;
+ambient.alt = 10000;
+run();
+page.display();
+
+// CASE 3
+ambient.MN = .8;
+ambient.alt = 25000;
+run();
+page.display();
