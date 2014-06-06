@@ -1,0 +1,37 @@
+
+
+setThermoPackage("GasTbl");
+
+
+real P;
+real Rho;
+real T;
+real gasConstant;
+P = 20;
+Rho = 0.0765;
+T = 1000;
+gasConstant = 53.2;
+
+
+
+Independent ind_p {
+	varName = "P";
+}
+
+Dependent dep_PGL {
+	eq_rhs = "P *144 / Rho";
+	eq_lhs = "gasConstant * T";
+}
+
+solver.addIndependent("ind_p");
+solver.addDependent("dep_PGL");
+
+run();
+
+
+
+// output the variable values
+cout << "pressure = "    << P << endl;
+cout << "temperature = " << T << endl;
+cout << "density = "     << Rho << endl;
+cout << "gasConstant = " << gasConstant << endl;

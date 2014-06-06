@@ -1,0 +1,69 @@
+//
+//  Exercise 4, Part III: Constraints
+//
+
+
+// create 4 variables of type real
+real pressure;
+real temperature;
+real density;
+real gasConstant;
+
+// assign some values to the variables
+pressure = 20.;       // psia
+temperature = 1000.;  // rankine
+density = 0.0765;     // lbm/ft3
+gasConstant = 53.2;   // ft-lbf/(lbm-R)
+
+
+// instantiate two Indepedent objects and three Dependent objects
+Independent ind_p { 
+   varName = "pressure";
+} 
+
+Independent ind_t { 
+   varName = "temperature";
+} 
+
+Dependent dep_PGL { 
+   eq_lhs = "pressure*144. / density";
+   eq_rhs = "gasConstant * temperature";
+} 
+
+Dependent dep_temp { 
+   eq_lhs = "temperature";
+   eq_rhs = "2.*450. + 100.";
+} 
+
+Dependent dep_tempLimit { 
+   eq_lhs = "temperature";
+   eq_rhs = "800.";
+} 
+
+
+// place the temperature limit constraint BEFORE the dependent is made active
+dep_temp.addConstraint( "dep_tempLimit", "MAX", 1, 1  ); 
+
+
+// make the above Independents and Dependents active
+solver.addIndependent( "ind_p" );
+solver.addDependent( "dep_PGL" );
+
+solver.addIndependent( "ind_t" );
+solver.addDependent( "dep_temp" );
+
+
+
+
+// execute the model
+run();
+
+
+
+// output the variable values
+cout << "pressure = "    << pressure << endl;
+cout << "temperature = " << temperature << endl;
+cout << "density = "     << density << endl;
+cout << "gasConstant = " << gasConstant << endl;
+
+

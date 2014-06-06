@@ -9,8 +9,36 @@ real hout;
 real houtIdeal;
 real dhIdeal;
 real eff;
+real x;
+ x = 10;
+
+Element comp {
+
+	real target = 200;
+
+}
 
 
+
+Independent a {
+	varName = "x";
+}
+
+Dependent equation {
+	eq_rhs = "3*x";
+	eq_lhs = "comp.target";
+}
+
+solver.addIndependent("a");
+solver.addDependent("equation");
+
+run();
+
+cout << x << endl;
+
+quit();
+
+cout << coolFunction(1,2) << endl;
 
 FlowStation stationX;
 stationX.W = 100;

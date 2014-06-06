@@ -1,0 +1,68 @@
+//
+//  Exercise 3: Elements in a Turbojet Model
+//
+
+
+// declare the thermodynamics package to be used
+setThermoPackage( "GasTbl" );
+
+
+// instantiate the Elements in this model
+// syntax is: 
+// Element elementType elementName { }
+
+Element FlightConditions ambient {
+} 
+
+
+Element Inlet inlet { 
+} 
+
+
+Element Compressor HPC { 
+} 
+
+
+Element FuelStart fuelIn { 
+} 
+
+
+Element Burner burner { 
+} 
+
+
+Element Turbine HPT { 
+} 
+
+
+Element Nozzle nozzle { 
+} 
+
+
+Element FlowEnd end { 
+} 
+
+
+Element Shaft shaft { 
+   ShaftInputPort HPClink;
+   ShaftInputPort HPTlink;
+} 
+
+
+// link the Elements together via their Ports
+linkPorts( "ambient.Fl_O", "inlet.Fl_I",    "station0"  );
+linkPorts( "inlet.Fl_O",   "HPC.Fl_I",      "station2"  );
+linkPorts( "HPC.Fl_O",     "burner.Fl_I",   "station3"  );
+linkPorts( "fuelIn.Fu_O",  "burner.Fu_I",   "stationF"  );
+linkPorts( "burner.Fl_O",  "HPT.Fl_I",      "station4"  );
+linkPorts( "HPT.Fl_O",     "nozzle.Fl_I",   "station5"  );
+linkPorts( "nozzle.Fl_O",  "end.Fl_I",      "station9"  );
+
+linkPorts( "HPC.Sh_O",     "shaft.HPClink", "HPCwork"   );
+linkPorts( "HPT.Sh_O",     "shaft.HPTlink", "HPTwork"   );
+
+
+// print a "done" statement
+cout << "done parsing the model \n"; 
+
+
