@@ -1,7 +1,6 @@
 //
-//  Exercise 6: Creating a DataViewer
-//     builds off of Exercise 5
-//
+//  Exercise 8: User-Defined Functions
+// 
 
 
 // declare the thermodynamics package to be used
@@ -25,10 +24,10 @@ Element Inlet inlet {
 
 
 Element Compressor HPC { 
-	#include <maps/hpc.map>;
-	S_map.PRdes = 20.;
-	S_map.effDes = 0.90;
-  
+   #include <maps/hpc.map>
+   S_map.PRdes = 20.;
+   S_map.effDes = 0.90;
+   //NcDes = 100.;
 } 
 
 
@@ -43,11 +42,12 @@ Element Burner burner {
 } 
 
 
-Element Turbine HPT {
-	#include <maps/hpt.map>
-	S_map.parmMap= 4.00;
-	S_map.effDes = 0.90;
-	S_map.parmMapDes = 4.5;    /// ??
+Element Turbine HPT { 
+   #include <maps/hpt.map>
+   S_map.parmMap = 4.00;
+   S_map.effDes = 0.90;
+   S_map.parmMapDes = 4.5;
+   //NpDes = 100.;
 } 
 
 
@@ -105,40 +105,89 @@ cout << "burner exit temperature = " << burner.Fl_O.Tt << " " << burner.Fl_O.Tt.
 cout << endl;
 
 
-Independent ind_FAR {
-	varName = "burner.FAR";
-}
-
-Dependent dep_HPCncdes {
-	eq_rhs = "HPC.S_map.NcMap";
-	eq_lhs = "1.00";
-}
-
-
+//---------------------------------------------------------------------------
+//   SET THE MODEL TO OFF-DESIGN MODE AND RUN CASE
+//---------------------------------------------------------------------------
 setOption( "switchDes", "OFFDESIGN" );
 autoSolverSetup();
 
-solver.addIndependent("ind_FAR");
-solver.addDependent("dep_HPCncdes");
-
 run();
 page.display();
 
 
-// CASE 1
-ambient.MN = 0;
-ambient.alt = 0;
-//run();
-//page.display();
 
-// CASE 2
-ambient.MN = .4;
-ambient.alt = 10000;
+//---------------------------------------------------------------------------
+//   EXERCISE 8: DEFINE A FUNCTION TO RUN A THROTTLE HOOK
+//---------------------------------------------------------------------------
+
+// we'll need these Independents and Dependents
+Independent ind_engineFAR { 
+   varName = "burner.FAR";
+} 
+
+Dependent dep_HPCspeed { 
+   eq_lhs = "HPC.S_map.NcMap";
+   eq_rhs = "1.00";
+} 
+
+void runCases( real MNin, real ALTin ) { 
+   
+   // set Mach # and altitude from arguments
+   ambient.MN = MNin;
+   ambient.alt = ALTin;
+   ++CASE;
+   
+   // set up solver
+   autoSolverSetup();
+   solver.addIndependent( "ind_engineFAR" );
+   solver.addDependent( "dep_HPCspeed" );
+
+   // run each case and output the data
+   dep_HPCspeed.eq_rhs = "1.00";
+   run();  page.display();
+
+   dep_HPCspeed.eq_rhs = "0.90";
+   run();  page.display();
+
+   dep_HPCspeed.eq_rhs = "0.80";
+   run();  page.display();
+
+   dep_HPCspeed.eq_rhs = "0.70";
+   run();  page.display();
+
+   dep_HPCspeed.eq_rhs = "0.60";
+   run();  page.display();
+
+} 
+
+
+// this runs the original three cases from Exercise 7
+solver.addIndependent( "ind_engineFAR" );
+solver.addDependent( "dep_HPCspeed" );
+
+// case 1: flight Mach 0.00, altitude 0 ft
+CASE = 1;
+ambient.MN = 0.00;
+ambient.alt = 0.;
 run();
 page.display();
 
-// CASE 3
-ambient.MN = .8;
-ambient.alt = 25000;
+// case 2: flight Mach 0.40, altitude 10000 ft
+CASE = 2;
+ambient.MN = 0.40;
+ambient.alt = 10000.;
 run();
 page.display();
+
+// case 3: flight Mach 0.80, altitude 25000 ft
+CASE = 3;
+ambient.MN = 0.80;
+ambient.alt = 25000.;
+run();
+page.display();
+
+// execute the function defined above; Mach=0.40, altitude=10k ft
+runCases( 0.40, 10000. );
+
+
+

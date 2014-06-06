@@ -81,6 +81,12 @@ linkPorts( "HPC.Sh_O",     "shaft.HPClink", "HPCwork"   );
 linkPorts( "HPT.Sh_O",     "shaft.HPTlink", "HPTwork"   );
 
 
+
+
+//--------------------------------------------
+
+
+
 // print a "done" statement
 cout << "done parsing the model \n";
 
@@ -110,8 +116,8 @@ Independent ind_FAR {
 }
 
 Dependent dep_HPCncdes {
-	eq_rhs = "HPC.S_map.NcMap";
-	eq_lhs = "1.00";
+	eq_lhs = "HPC.S_map.NcMap";
+	eq_rhs = "1.00";
 }
 
 
@@ -124,6 +130,34 @@ solver.addDependent("dep_HPCncdes");
 run();
 page.display();
 
+void RunEngine(real MNx, real altx) {
+   ambient.MN = MNx;
+   ambient.alt = altx;
+
+   autoSolverSetup();
+   solver.addIndependent("ind_FAR");
+   solver.addDependent("dep_HPCncdes");
+
+
+   cout << solver.list("Independent",TRUE);
+   cout << solver.list("Dependent",TRUE);
+
+   // run each case and output the data
+   dep_HPCncdes.eq_rhs = "1.00";
+   run();  page.display();
+
+   dep_HPCncdes.eq_rhs = "0.90";
+   run();  page.display();
+
+   dep_HPCncdes.eq_rhs = "0.80";
+   run();  page.display();
+
+   dep_HPCncdes.eq_rhs = "0.70";
+   run();  page.display();
+
+   dep_HPCncdes.eq_rhs = "0.60";
+   run();  page.display();
+}
 
 // CASE 1
 ambient.MN = 0;
@@ -142,3 +176,5 @@ ambient.MN = .8;
 ambient.alt = 25000;
 run();
 page.display();
+
+RunEngine(0.4,10000);

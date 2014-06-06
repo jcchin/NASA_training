@@ -119,7 +119,7 @@ setOption( "switchDes", "DESIGN" ); // ????
 
 // execute the DESIGN point
 run();
-myView.display; //????
+myView.display(); //????
 
 // output some variables of interest
 cout << "turbojet gross thrust = " << nozzle.Fg << " " << nozzle.Fg.units << endl;

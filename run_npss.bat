@@ -1,7 +1,17 @@
 @echo off
 
 
-set NPSS_TOP=C:\Program Files (x86)\NPSS.nt.V165C-OPT-Full\
+IF EXIST Z:\Documents\2014\RHC\GT_sfun\NPSS.nt.sfunction2\ (
+    REM Run file for Jeffrey Chin
+    set NPSS_TOP=Z:\Documents\2014\RHC\GT_sfun\NPSS.nt.sfunction2\
+)
+
+REM IF EXIST C:\Program Files (x86)\NPSS.nt.V165C-OPT-Full\ (
+    REM Run file for Sydney Schnulo
+REM    set NPSS_TOP=C:\Program Files (x86)\NPSS.nt.V165C-OPT-Full\
+REM)
+
+
 
 set NPSS_CONFIG=nt
 set NPSS_DEV_TOP=%NPSS_TOP%\DLMdevkit

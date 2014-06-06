@@ -1,0 +1,14 @@
+   MN = 0.40  altitude = 10000.0 ft   Net Thrust =  8844.2 lb fuel flow =  10800.0 lbm/hr
+
+                      massflow       Pt       Tt
+station0 inlet.Fl_I     100.00   11.242   498.49
+station2 HPC.Fl_I       100.00   11.017   498.49
+station3 burner.Fl_I    100.00  220.340  1226.93
+station4 HPT.Fl_I       103.00  220.340  3004.16
+station5 nozzle.Fl_I    103.00   55.085  2284.89
+station9 end.Fl_I       103.00   55.085  2284.89
+
+
+
+
+
